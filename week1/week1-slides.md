@@ -2266,6 +2266,4 @@ We'll explore:
 - **Topic:** Lists and Linked Lists
 - **Reading:** Weiss Chapter 3.1-3.5
 
-### Lab Session Today!
-
 **Get ready to dive deep into data structures!**
