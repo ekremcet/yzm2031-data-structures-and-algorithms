@@ -267,6 +267,117 @@ void processAudio() {
 
 ---
 
+# Multi-Level Queue
+
+## Different Queues for Different Priorities
+
+A **multi-level queue** uses separate queues for different priority levels.
+
+**Real-World Example:** Operating system task scheduling
+
+```
+High Priority Queue:    [System Task] → [Urgent Task]
+                               ↓
+Medium Priority Queue:  [User Task] → [Background Task]
+                               ↓
+Low Priority Queue:     [Cleanup] → [Logging]
+```
+
+**Rule:** Always serve from highest priority queue that has tasks.
+
+---
+
+# Multi-Level Queue Implementation
+
+```cpp
+class MultiLevelQueue {
+private:
+    queue<string> highPriority;
+    queue<string> mediumPriority;
+    queue<string> lowPriority;
+
+public:
+    void enqueue(string task, int priority) {
+        if (priority >= 7) {
+            highPriority.push(task);
+        } else if (priority >= 4) {
+            mediumPriority.push(task);
+        } else {
+            lowPriority.push(task);
+        }
+    }
+
+    string dequeue() {
+        // Check high priority first
+        if (!highPriority.empty()) {
+            string task = highPriority.front();
+            highPriority.pop();
+            return task;
+        }
+        // Then medium priority
+        if (!mediumPriority.empty()) {
+            string task = mediumPriority.front();
+            mediumPriority.pop();
+            return task;
+        }
+        // Finally low priority
+        if (!lowPriority.empty()) {
+            string task = lowPriority.front();
+            lowPriority.pop();
+            return task;
+        }
+        return "";  // No tasks
+    }
+    
+    bool isEmpty() {
+        return highPriority.empty() && 
+               mediumPriority.empty() && 
+               lowPriority.empty();
+    }
+};
+```
+
+---
+
+# Multi-Level Queue Example
+
+```cpp
+MultiLevelQueue scheduler;
+
+// Add tasks with priorities (1-10)
+scheduler.enqueue("Critical Update", 9);
+scheduler.enqueue("User Email", 5);
+scheduler.enqueue("Background Sync", 2);
+scheduler.enqueue("Emergency Alert", 10);
+
+// Process tasks
+cout << scheduler.dequeue() << endl;  // "Critical Update"
+cout << scheduler.dequeue() << endl;  // "Emergency Alert"
+cout << scheduler.dequeue() << endl;  // "User Email"
+cout << scheduler.dequeue() << endl;  // "Background Sync"
+```
+
+**Key Point:** High priority tasks always run first!
+
+---
+
+# When to Use Multi-Level Queue
+
+**Use when:**
+- Tasks have distinct priority levels
+- High-priority tasks must run first
+- Priority levels don't change frequently
+
+**Examples:**
+- Operating system process scheduling
+- Print job management
+- Customer service ticket systems
+- Network packet routing
+
+**Advantage over single queue:** Important tasks never wait behind unimportant ones!
+
+---
+
 # When to Use Ring Buffers
 
 ## Comparison with Regular Queues
@@ -1038,7 +1149,9 @@ p { text-align: center}
 h1 {text-align: center; font-size: 72px}
 </style>
 
-# Let's Practice - LeetCode
+# Let's Practice
+
+### LeetCode Problems
 
 ---
 
@@ -1164,12 +1277,15 @@ bool isAnagram(string s, string t) {
 
 ## Queue Variations
 - **Ring Buffer**: Fixed-size circular buffer for streaming data
-- **Multi-Level Queue**: Different queues for different priority levels
+- **Multi-Level Queue**: Separate queues for different priority levels
+- **Use cases**: Streaming, OS scheduling, task management
+- **Benefits**: O(1) operations, priority handling, predictable performance
 
 ## Strings
-- **C-strings**: Null-terminated character arrays (unsafe)
+- **C-strings**: Null-terminated character arrays (need null terminator!)
 - **std::string**: Safe, convenient, automatic memory management
-- **Algorithms**: Pattern matching, tokenization, transformations
+- **Common operations**: Concatenation, substring, find, comparison
+- **Algorithms**: Reverse, palindrome, tokenization, word manipulation
 
 ---
 
