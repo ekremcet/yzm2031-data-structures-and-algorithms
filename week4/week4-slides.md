@@ -1071,12 +1071,17 @@ reverseWords("  multiple   spaces  "); // "spaces multiple"
 
 ```cpp
 string reverseWords(string s) {
-    // Split into words using our split function
-    vector<string> words = split(s);
+    // Split into words (handles extra spaces automatically)
+    vector<string> words;
+    stringstream ss(s);
+    string word;
     
     while (ss >> word) {
         words.push_back(word);
     }
+    
+    // Reverse the words vector
+    reverse(words.begin(), words.end());
     
     // Join words back with spaces
     string result = "";
