@@ -1,0 +1,209 @@
+.tree-svg {
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+}
+
+.tree-node circle {
+  stroke-width: 3px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tree-node.balanced circle {
+  fill: var(--bg-secondary);
+  stroke: var(--node-balanced);
+}
+
+.tree-node.unbalanced circle {
+  fill: #7f1d1d;
+  stroke: var(--node-unbalanced);
+  stroke-width: 4px;
+  animation: pulse-danger 0.8s ease-in-out infinite;
+}
+
+.tree-node.unbalanced text.value {
+  fill: white;
+}
+
+.tree-node.unbalanced text.bf {
+  fill: #fca5a5;
+  font-weight: 600;
+}
+
+.tree-node.new circle {
+  fill: var(--accent-primary);
+  stroke: var(--accent-secondary);
+}
+
+/* Deleting node */
+.tree-node.deleting circle {
+  fill: #7f1d1d;
+  stroke: #ef4444;
+  stroke-width: 4px;
+  animation: pulse-delete 0.6s ease-in-out infinite;
+}
+
+.tree-node.deleting text.value {
+  fill: white;
+}
+
+@keyframes pulse-delete {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 16px rgba(239, 68, 68, 1));
+    transform: scale(1.05);
+  }
+}
+
+/* Successor node */
+.tree-node.successor circle {
+  fill: #065f46;
+  stroke: #10b981;
+  stroke-width: 4px;
+  animation: pulse-successor 0.8s ease-in-out infinite;
+}
+
+.tree-node.successor text.value {
+  fill: white;
+}
+
+@keyframes pulse-successor {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.8));
+  }
+  50% {
+    filter: drop-shadow(0 0 16px rgba(16, 185, 129, 1));
+  }
+}
+
+/* Highlight states for animation */
+.tree-node.highlighted circle {
+  fill: var(--bg-tertiary);
+  stroke: var(--warning);
+  stroke-width: 4px;
+}
+
+.tree-node.comparing circle {
+  fill: var(--warning);
+  stroke: #fbbf24;
+  stroke-width: 4px;
+  animation: pulse-compare 0.5s ease-in-out infinite;
+}
+
+.tree-node .highlight-ring {
+  fill: none;
+  stroke: var(--warning);
+  stroke-width: 2px;
+  stroke-dasharray: 8 4;
+  animation: rotate-dash 1s linear infinite;
+}
+
+@keyframes rotate-dash {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 24;
+  }
+}
+
+@keyframes pulse-compare {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px var(--warning));
+  }
+  50% {
+    filter: drop-shadow(0 0 16px var(--warning));
+  }
+}
+
+/* Red-Black Tree Styles */
+.tree-node.rb-red circle {
+  fill: #dc2626;
+  stroke: #ef4444;
+  filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.5));
+}
+
+.tree-node.rb-black circle {
+  fill: #1f2937;
+  stroke: #4b5563;
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5));
+}
+
+.tree-node.rb-red text.value,
+.tree-node.rb-black text.value {
+  fill: white;
+}
+
+.tree-node.rb-red text.color-label {
+  fill: rgba(255, 255, 255, 0.7);
+}
+
+.tree-node.rb-black text.color-label {
+  fill: rgba(255, 255, 255, 0.5);
+}
+
+.tree-edge.rb-edge-red {
+  stroke: #ef4444;
+  stroke-width: 2px;
+}
+
+.tree-edge.edge-highlighted {
+  stroke: var(--warning);
+  stroke-width: 3px;
+  animation: pulse-edge 0.5s ease-in-out infinite;
+}
+
+@keyframes pulse-edge {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes pulse-danger {
+  0%, 100% { 
+    filter: drop-shadow(0 0 4px var(--node-unbalanced));
+  }
+  50% { 
+    filter: drop-shadow(0 0 12px var(--node-unbalanced));
+  }
+}
+
+.tree-node text.value {
+  fill: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.tree-node.comparing text.value,
+.tree-node.highlighted text.value {
+  fill: var(--bg-primary);
+}
+
+.tree-node text.bf {
+  fill: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-anchor: middle;
+}
+
+.tree-node text.color-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-anchor: middle;
+  font-weight: 600;
+}
+
+.tree-edge {
+  stroke: var(--edge-color);
+  stroke-width: 2px;
+  fill: none;
+}

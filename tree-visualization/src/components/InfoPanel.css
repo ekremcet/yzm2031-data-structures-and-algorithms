@@ -1,0 +1,191 @@
+.info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stats {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--bg-tertiary);
+  padding: 1.25rem;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.stat-item {
+  text-align: center;
+  overflow: hidden;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent-secondary);
+  white-space: nowrap;
+}
+
+.stat-value.rb-mode {
+  background: linear-gradient(90deg, #ef4444 0%, #ef4444 35%, var(--text-primary) 65%, var(--text-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.log-container {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--bg-tertiary);
+  padding: 1.25rem;
+  flex: 1;
+  min-height: 180px;
+  max-height: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.log-container h3,
+.legend h3,
+.rb-rules h3 {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+}
+
+.operation-log {
+  flex: 1;
+  overflow-y: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.operation-log::-webkit-scrollbar {
+  width: 6px;
+}
+
+.operation-log::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+}
+
+.operation-log::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
+  border-radius: 3px;
+}
+
+.log-entry {
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  background: var(--bg-tertiary);
+}
+
+.log-entry.insert {
+  border-left: 3px solid var(--success);
+}
+
+.log-entry.rotation {
+  border-left: 3px solid var(--warning);
+}
+
+.log-entry.info {
+  border-left: 3px solid var(--accent-primary);
+}
+
+.legend {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--bg-tertiary);
+  padding: 1.25rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.legend-item:last-child {
+  margin-bottom: 0;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-color.balanced {
+  background: var(--node-balanced);
+}
+
+.legend-color.unbalanced {
+  background: var(--node-unbalanced);
+}
+
+.legend-color.new-node {
+  background: var(--node-new);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.legend-color.rb-red {
+  background: #dc2626;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+}
+
+.legend-color.rb-black {
+  background: #1f2937;
+  border: 2px solid #4b5563;
+}
+
+.legend-color.deleting {
+  background: #7f1d1d;
+  border: 2px solid #ef4444;
+}
+
+.legend-color.successor {
+  background: #065f46;
+  border: 2px solid #10b981;
+}
+
+/* Red-Black Rules Panel */
+.rb-rules {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--bg-tertiary);
+  padding: 1.25rem;
+}
+
+.rb-rules ol {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.rb-rules li {
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.rb-rules li:last-child {
+  margin-bottom: 0;
+}
