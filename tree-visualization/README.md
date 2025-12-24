@@ -28,6 +28,32 @@ npm run dev
 
 Then open `http://localhost:5173` in your browser.
 
+### Build for production
+
+```bash
+npm run build
+```
+
+### Preview production build
+
+```bash
+npm run preview
+```
+
+## Quick Insert Examples
+
+- **10, 20, 30 (RR)** - Demonstrates Right-Right case → Left rotation
+- **30, 20, 10 (LL)** - Demonstrates Left-Left case → Right rotation
+- **30, 10, 20 (LR)** - Demonstrates Left-Right case → Double rotation
+- **10, 30, 20 (RL)** - Demonstrates Right-Left case → Double rotation
+
+## Tech Stack
+
+- **React 18** - UI framework
+- **Vite** - Build tool and dev server
+- **Framer Motion** - Animations
+- **CSS Variables** - Theming
+
 ## Project Structure
 
 ```

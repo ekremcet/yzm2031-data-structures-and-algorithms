@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import Controls from './components/Controls'
 import TreeCanvas from './components/TreeCanvas'
@@ -6,11 +6,44 @@ import InfoPanel from './components/InfoPanel'
 import { BST } from './lib/bst'
 import { AVLTree } from './lib/avl'
 import { RedBlackTree } from './lib/redblack'
+
+// Sorting imports
+import {
+  SortingControls,
+  ArrayVisualization,
+  BarChartVisualization,
+  SortingInfoPanel
+} from './components/sorting'
+import {
+  bubbleSort,
+  selectionSort,
+  insertionSort,
+  shellSort,
+  mergeSort,
+  quickSort,
+  heapSort
+} from './lib/sorting'
+
 import './App.css'
 
 const ANIMATION_SPEED = 1000 // ms per step (slower for better visibility)
 
+// Sorting algorithm map
+const sortingAlgorithms = {
+  bubble: bubbleSort,
+  selection: selectionSort,
+  insertion: insertionSort,
+  shell: shellSort,
+  merge: mergeSort,
+  quick: quickSort,
+  heap: heapSort
+}
+
 function App() {
+  // View mode: 'trees' or 'sorting'
+  const [viewMode, setViewMode] = useState('trees')
+
+  // Tree state
   const [mode, setMode] = useState('bst')
   const [bstTree, setBstTree] = useState(new BST())
   const [avlTree, setAvlTree] = useState(new AVLTree())
@@ -22,6 +55,18 @@ function App() {
   const [isAnimating, setIsAnimating] = useState(false)
   const [currentMessage, setCurrentMessage] = useState('Ready! Insert a node to begin.')
   const animationRef = useRef(null)
+
+  // Sorting state
+  const [sortingAlgorithm, setSortingAlgorithm] = useState('bubble')
+  const [sortingArray, setSortingArray] = useState([])
+  const [originalArray, setOriginalArray] = useState([])
+  const [sortingSteps, setSortingSteps] = useState([])
+  const [currentStepIndex, setCurrentStepIndex] = useState(-1)
+  const [isSortingPlaying, setIsSortingPlaying] = useState(false)
+  const [sortingSpeed, setSortingSpeed] = useState(500)
+  const [sortingLogs, setSortingLogs] = useState([{ type: 'info', message: 'Generate or enter an array to begin' }])
+  const [sortingStats, setSortingStats] = useState({ comparisons: 0, swaps: 0, arraySize: 0 })
+  const sortingIntervalRef = useRef(null)
 
   const getCurrentTree = () => {
     if (mode === 'bst') return bstTree
@@ -404,6 +449,127 @@ function App() {
     setKey(k => k + 1)
   }, [addLogs, isAnimating])
 
+  // =====================
+  // SORTING FUNCTIONS
+  // =====================
+
+  const generateSortingSteps = useCallback((array, algorithm) => {
+    const generator = sortingAlgorithms[algorithm]
+    if (!generator) return []
+    
+    const steps = []
+    for (const step of generator(array)) {
+      steps.push(step)
+    }
+    return steps
+  }, [])
+
+  const handleGenerateArray = useCallback((size) => {
+    const newArray = Array.from({ length: size }, () => 
+      Math.floor(Math.random() * 99) + 1
+    )
+    setSortingArray(newArray)
+    setOriginalArray([...newArray])
+    setCurrentStepIndex(-1)
+    setIsSortingPlaying(false)
+    setSortingStats({ comparisons: 0, swaps: 0, arraySize: size })
+    
+    // Generate steps
+    const steps = generateSortingSteps(newArray, sortingAlgorithm)
+    setSortingSteps(steps)
+    setSortingLogs([{ type: 'info', message: `Generated random array of ${size} elements` }])
+  }, [sortingAlgorithm, generateSortingSteps])
+
+  const handleSetArray = useCallback((array) => {
+    setSortingArray(array)
+    setOriginalArray([...array])
+    setCurrentStepIndex(-1)
+    setIsSortingPlaying(false)
+    setSortingStats({ comparisons: 0, swaps: 0, arraySize: array.length })
+    
+    // Generate steps
+    const steps = generateSortingSteps(array, sortingAlgorithm)
+    setSortingSteps(steps)
+    setSortingLogs([{ type: 'info', message: `Set custom array of ${array.length} elements` }])
+  }, [sortingAlgorithm, generateSortingSteps])
+
+  const handleAlgorithmChange = useCallback((algo) => {
+    setSortingAlgorithm(algo)
+    setCurrentStepIndex(-1)
+    setIsSortingPlaying(false)
+    
+    // Regenerate steps with original array
+    if (originalArray.length > 0) {
+      setSortingArray([...originalArray])
+      const steps = generateSortingSteps(originalArray, algo)
+      setSortingSteps(steps)
+      setSortingStats(prev => ({ ...prev, comparisons: 0, swaps: 0 }))
+      setSortingLogs([{ type: 'info', message: `Switched to ${algo} sort` }])
+    }
+  }, [originalArray, generateSortingSteps])
+
+  const handleSortingStep = useCallback(() => {
+    if (currentStepIndex >= sortingSteps.length - 1) {
+      setIsSortingPlaying(false)
+      return
+    }
+
+    const nextIndex = currentStepIndex + 1
+    const step = sortingSteps[nextIndex]
+    
+    setCurrentStepIndex(nextIndex)
+    setSortingArray(step.array)
+    
+    // Update stats
+    setSortingStats(prev => ({
+      ...prev,
+      comparisons: prev.comparisons + (step.type === 'compare' ? 1 : 0),
+      swaps: prev.swaps + (step.type === 'swap' ? 1 : 0)
+    }))
+    
+    // Add to log
+    setSortingLogs(prev => [{ type: step.type, message: step.message }, ...prev].slice(0, 20))
+  }, [currentStepIndex, sortingSteps])
+
+  const handleSortingPlay = useCallback(() => {
+    if (sortingSteps.length === 0) return
+    setIsSortingPlaying(true)
+  }, [sortingSteps])
+
+  const handleSortingPause = useCallback(() => {
+    setIsSortingPlaying(false)
+  }, [])
+
+  const handleSortingReset = useCallback(() => {
+    setIsSortingPlaying(false)
+    setCurrentStepIndex(-1)
+    setSortingArray([...originalArray])
+    setSortingStats(prev => ({ ...prev, comparisons: 0, swaps: 0 }))
+    setSortingLogs([{ type: 'info', message: 'Reset to original array' }])
+  }, [originalArray])
+
+  // Auto-play effect for sorting
+  useEffect(() => {
+    if (isSortingPlaying) {
+      sortingIntervalRef.current = setInterval(() => {
+        handleSortingStep()
+      }, sortingSpeed)
+    }
+    
+    return () => {
+      if (sortingIntervalRef.current) {
+        clearInterval(sortingIntervalRef.current)
+      }
+    }
+  }, [isSortingPlaying, sortingSpeed, handleSortingStep])
+
+  // Stop playing when steps are exhausted
+  useEffect(() => {
+    if (currentStepIndex >= sortingSteps.length - 1 && isSortingPlaying) {
+      setIsSortingPlaying(false)
+    }
+  }, [currentStepIndex, sortingSteps.length, isSortingPlaying])
+
   const modeName = mode === 'rb' ? 'Red-Black' : mode.toUpperCase()
   
   const stats = {
@@ -412,49 +578,122 @@ function App() {
     height: currentTree.getTreeHeight()
   }
 
+  const currentSortingStep = currentStepIndex >= 0 ? sortingSteps[currentStepIndex] : null
+  const maxValue = originalArray.length > 0 ? Math.max(...originalArray) : 100
+
   return (
     <div className="container">
       <header>
-        <h1>Tree Visualization</h1>
-        <p className="subtitle">Interactive BST, AVL & Red-Black Tree Demo</p>
+        <h1>{viewMode === 'trees' ? 'Tree Visualization' : 'Sorting Algorithms'}</h1>
+        <p className="subtitle">
+          {viewMode === 'trees' 
+            ? 'Interactive BST, AVL & Red-Black Tree Demo'
+            : 'Step-by-step Sorting Algorithm Visualization'}
+        </p>
       </header>
 
-      <Controls
-        mode={mode}
-        onModeChange={handleModeChange}
-        onInsert={handleInsert}
-        onDelete={handleDelete}
-        onClear={handleClear}
-        isAnimating={isAnimating}
-      />
-
-      <div className={`animation-message ${isAnimating ? 'active' : ''}`}>
-        <span className={`status-dot ${isAnimating ? 'pulse-dot' : 'ready-dot'}`}></span>
-        {currentMessage}
+      {/* View Mode Toggle */}
+      <div className="view-mode-toggle">
+        <button
+          className={`view-btn ${viewMode === 'trees' ? 'active' : ''}`}
+          onClick={() => setViewMode('trees')}
+        >
+          🌳 Trees
+        </button>
+        <button
+          className={`view-btn ${viewMode === 'sorting' ? 'active' : ''}`}
+          onClick={() => setViewMode('sorting')}
+        >
+          📊 Sorting
+        </button>
       </div>
 
-      <div className="main-content">
-        <div className="tree-container">
-          <AnimatePresence mode="wait">
-            <TreeCanvas 
-              key={key}
-              root={currentTree.root} 
-              tree={currentTree}
-              mode={mode}
-              highlightedNodes={highlightedNodes}
-              comparingNode={comparingNode}
-            />
-          </AnimatePresence>
-          {!currentTree.root && (
-            <div className="empty-message">
-              <span className="icon">🌳</span>
-              <p>Insert a node to start</p>
+      {viewMode === 'trees' ? (
+        <>
+          <Controls
+            mode={mode}
+            onModeChange={handleModeChange}
+            onInsert={handleInsert}
+            onDelete={handleDelete}
+            onClear={handleClear}
+            isAnimating={isAnimating}
+          />
+
+          <div className={`animation-message ${isAnimating ? 'active' : ''}`}>
+            <span className={`status-dot ${isAnimating ? 'pulse-dot' : 'ready-dot'}`}></span>
+            {currentMessage}
+          </div>
+
+          <div className="main-content">
+            <div className="tree-container">
+              <AnimatePresence mode="wait">
+                <TreeCanvas 
+                  key={key}
+                  root={currentTree.root} 
+                  tree={currentTree}
+                  mode={mode}
+                  highlightedNodes={highlightedNodes}
+                  comparingNode={comparingNode}
+                />
+              </AnimatePresence>
+              {!currentTree.root && (
+                <div className="empty-message">
+                  <span className="icon">🌳</span>
+                  <p>Insert a node to start</p>
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
-        <InfoPanel stats={stats} logs={logs} mode={mode} />
-      </div>
+            <InfoPanel stats={stats} logs={logs} mode={mode} />
+          </div>
+        </>
+      ) : (
+        <>
+          <SortingControls
+            algorithm={sortingAlgorithm}
+            onAlgorithmChange={handleAlgorithmChange}
+            onGenerateArray={handleGenerateArray}
+            onSetArray={handleSetArray}
+            onPlay={handleSortingPlay}
+            onPause={handleSortingPause}
+            onStep={handleSortingStep}
+            onReset={handleSortingReset}
+            isPlaying={isSortingPlaying}
+            speed={sortingSpeed}
+            onSpeedChange={setSortingSpeed}
+            currentStepIndex={currentStepIndex}
+            totalSteps={sortingSteps.length}
+            disabled={sortingArray.length === 0}
+          />
+
+          <div className={`animation-message ${isSortingPlaying ? 'active' : ''}`}>
+            <span className={`status-dot ${isSortingPlaying ? 'pulse-dot' : 'ready-dot'}`}></span>
+            {currentSortingStep?.message || 'Generate an array and press Play to begin'}
+          </div>
+
+          <div className="main-content sorting-layout">
+            <div className="visualizations">
+              <ArrayVisualization
+                array={sortingArray}
+                currentStep={currentSortingStep}
+                maxValue={maxValue}
+              />
+              <BarChartVisualization
+                array={sortingArray}
+                currentStep={currentSortingStep}
+                maxValue={maxValue}
+              />
+            </div>
+
+            <SortingInfoPanel
+              algorithm={sortingAlgorithm}
+              currentStep={currentSortingStep}
+              stats={sortingStats}
+              logs={sortingLogs}
+            />
+          </div>
+        </>
+      )}
     </div>
   )
 }

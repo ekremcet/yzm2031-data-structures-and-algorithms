@@ -1,0 +1,264 @@
+.sorting-info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  padding: 1.25rem;
+  border: 1px solid var(--bg-tertiary);
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+}
+
+.sorting-info-panel h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--bg-tertiary);
+}
+
+/* Algorithm Info */
+.algo-info {
+  padding-bottom: 0.75rem;
+}
+
+.algo-description {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.complexity-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.complexity-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  background: var(--bg-tertiary);
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
+.complexity-label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.complexity-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.complexity-value.best {
+  color: #22c55e;
+}
+
+.complexity-value.avg {
+  color: #f59e0b;
+}
+
+.complexity-value.worst {
+  color: #ef4444;
+}
+
+.complexity-value.space {
+  color: #3b82f6;
+}
+
+.properties {
+  display: flex;
+  gap: 1rem;
+}
+
+.property {
+  font-size: 0.8rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.property.yes {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.property.no {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+/* Step Info */
+.step-info {
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  padding: 0.75rem;
+}
+
+.step-info h3 {
+  margin-bottom: 0.5rem;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.step-message {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+  min-height: 2.5em;
+}
+
+/* Stats */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.sorting-stats .stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--bg-tertiary);
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
+.sorting-stats .stat-label {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.sorting-stats .stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+/* Operation Log */
+.log-container {
+  flex: 1;
+  min-height: 120px;
+  max-height: 200px;
+}
+
+.operation-log {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: 170px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.log-entry {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-left: 3px solid transparent;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.log-entry.compare {
+  border-left-color: #f59e0b;
+}
+
+.log-entry.swap {
+  border-left-color: #ef4444;
+}
+
+.log-entry.sorted {
+  border-left-color: #22c55e;
+}
+
+.log-entry.info {
+  border-left-color: #3b82f6;
+}
+
+.log-entry.done {
+  border-left-color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+/* Color Legend */
+.legend-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.color-legend .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.color-legend .legend-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.legend-color.default {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.legend-color.comparing {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.legend-color.swapping {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.legend-color.sorted {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.legend-color.pivot {
+  background: linear-gradient(135deg, #ec4899, #db2777);
+}
+
+.legend-color.minimum {
+  background: linear-gradient(135deg, #14b8a6, #0d9488);
+}
+
+/* Scrollbar styling */
+.sorting-info-panel::-webkit-scrollbar,
+.operation-log::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sorting-info-panel::-webkit-scrollbar-track,
+.operation-log::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+}
+
+.sorting-info-panel::-webkit-scrollbar-thumb,
+.operation-log::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
+  border-radius: 3px;
+}
